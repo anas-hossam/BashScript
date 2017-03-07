@@ -40,11 +40,11 @@ Drop_Database)
 Create_Table)
 {
 	shopt -s extglob
-	read -p "Enter Name of Table?"
+	read -p "Enter Name of Table: "
 	tableName=$REPLY
 	touch $tableName
 	shopt -s extglob
-	read -p "Enter Number of Columns?"
+	read -p "Enter Number of Columns: "
 	numCols=$REPLY
 	for(( i=0; i<$numCols ;i++ ))
 	do
@@ -98,11 +98,34 @@ Insert_To_Table)
 	 done
 }
 ;;
-Update_Table) echo Update Table.
+Update_Table)
+{
+	#echo Update Table.
+	shopt -s extglob
+	read -p "Enter Table Name : "
+	table=$REPLY
+	read -p "Update Where ID : "
+	id=$REPLY
+	numOfFields=$(awk -F: '{if (NR==1) print NF;}' $table)
+  numOfRow=$(awk -v n=${id} 'BEGIN{FS=":"; RS="\n";}{if ($1==n){ print NR;}}' $table)
+	oldValue=$(awk -v n=${id} 'BEGIN{FS=":"; RS="\n";}{if ($1==n){ print $3;}}' $table)
+	lines=$(awk -v n=${id} 'BEGIN{FS=":"; RS="\n";}{if ($1==n){ print $0;}}' $table)
+	#echo $lines
+  read -p "Enter New Value of '$oldValue' : "
+	newValue=$REPLY
+$(sed -i "s/$oldValue/$newValue/g" "$table")
+echo $(sed -n "${numOfRow}p" $table)
+}
 ;;
 Delete_From_Table)
 {
-	echo Delete Table.
+	shopt -s extglob
+	read -p "Enter Table Name : "
+	table=$REPLY
+	read -p "Delete Where ID : "
+	id=$REPLY
+	numOfRow=$(awk -v n=${id} 'BEGIN{FS=":"; RS="\n";}{if ($1==n){ print NR;}}' $table)
+  $(sed -i "${numOfRow}d" "$table")
 }
 ;;
 Select_From_Table)
