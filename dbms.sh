@@ -1,5 +1,5 @@
 #!bin/bash
-select choice in Create_Database Use_Database Rename_Database Drop_Database Create_Table Drop_Table Insert_To_Table Update_Table Delete_From_Table Select_From_Table
+select choice in Create_Database Show_Databases Use_Database Rename_Database Drop_Database Create_Table Drop_Table Insert_To_Table Update_Table Delete_From_Table Select_From_Table
 do
 case $choice in
 Create_Database)
@@ -7,6 +7,11 @@ Create_Database)
 	shopt -s extglob
 	read -p "Enter Database Name :"
 	mkdir $REPLY
+}
+;;
+Show_Databases)
+{
+	ls -l| grep "^d"
 }
 ;;
 Use_Database)
@@ -120,14 +125,11 @@ Select_From_Table)
 	 fi
 	 done
 	 shopt -s extglob
- 	 read -p "Enter selection type : "
+ 	 read -p "Enter selection value you want to select by : "
  	 selection=$REPLY
-	#  echo $selection
-	 data=$(sed -n '/$selection/p' $table)
+	 data=$(sed -n '/'$selection'/p' $table)
 	 echo $data
-	#  if (($selection == 'all')); then
-	# 	 	awk -F: '{print $0}' $table
-	#  fi
+
 }
 ;;
 *) echo $REPLY is not one of the choices.
