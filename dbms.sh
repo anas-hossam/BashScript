@@ -1,5 +1,4 @@
 #!bin/bash
-
 select choice in Create_Database Use_Database Rename_Database Drop_Database Create_Table Drop_Table Insert_To_Table Update_Table Delete_From_Table Select_From_Table
 do
 case $choice in
@@ -107,7 +106,28 @@ Delete_From_Table)
 ;;
 Select_From_Table)
 {
-	echo select
+	shopt -s extglob
+	read -p "Enter Table Name : "
+	table=$REPLY
+	arr=($(awk -F: '{ for ( i = 1 ; i <= NF; i++){ if (NR==1) print $i; } }' $table));
+	echo 'you can select by :'
+	echo 'all'
+	for (( i = 0; i < ${#arr[@]}; i++ ));
+	  do
+	 if ((i%2==0))
+	 then
+		 echo ${arr[i]}
+	 fi
+	 done
+	 shopt -s extglob
+ 	 read -p "Enter selection type : "
+ 	 selection=$REPLY
+	#  echo $selection
+	 data=$(sed -n '/$selection/p' $table)
+	 echo $data
+	#  if (($selection == 'all')); then
+	# 	 	awk -F: '{print $0}' $table
+	#  fi
 }
 ;;
 *) echo $REPLY is not one of the choices.
