@@ -1,5 +1,5 @@
 #!bin/bash
-select choice in Create_Database Show_Databases Use_Database Rename_Database Drop_Database Create_Table Drop_Table Insert_To_Table Update_Table Delete_From_Table Select_From_Table_By Select_All
+select choice in Create_Database Show_Databases Use_Database Rename_Database Drop_Database Create_Table Drop_Table Insert_To_Table Update_Table Delete_From_Table Select_Where Select_All Select_test
 
 do
 case $choice in
@@ -110,7 +110,7 @@ Delete_From_Table)
 	echo Delete Table.
 }
 ;;
-Select_From_Table_By)
+Select_Where)
 {
 	shopt -s extglob
 	read -p "Enter Table Name : "
@@ -133,13 +133,21 @@ Select_From_Table_By)
 }
 ;;
 
+
 Select_All)
 shopt -s extglob
 read -p "Enter Table Name : "
 table=$REPLY
 data=$(awk -F: '{print $0}' $table)
 echo $data
-
+ ;;
+ Select_test)
+ shopt -s extglob
+ read -p "Enter Table Name : "
+ table=$REPLY
+  read -p "Enter Coluumn Name : " col
+ data=$(awk -F: '{print $'$col'}' $table)
+ echo $data
  ;;
 *) echo $REPLY is not one of the choices.
 ;;
